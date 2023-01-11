@@ -2,6 +2,10 @@ import React, { useState, useRef } from "react";
 import { UserList } from "./UserList";
 import { CreateUser } from "./CreateUser";
 
+function countActiveUser(users) {
+    return users.filter((user) => user.active).length;
+}
+
 function App() {
     const [users, setUsers] = useState([
         {
@@ -68,6 +72,8 @@ function App() {
         );
     };
 
+    const count = countActiveUser(users);
+
     return (
         <>
             <CreateUser
@@ -77,6 +83,7 @@ function App() {
                 onChange={onChange}
             />
             <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+            <div>활성사용자 수 : {count}</div>
         </>
     );
 }
