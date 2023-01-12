@@ -12,7 +12,12 @@ my-app2 들어가서 npm install 후 npm start 하세요
 ***
 
 
-### 컴포넌트 선언 및 props
+### 컴포넌트 선언 + props + 조건부 렌더링
+```
+self close말고 컴포넌트 안에 내용이 추가된다면, props.children으로 받아서 뿌려주면 됨
+컴포넌트에 props명만 넘기면 받는 컴포넌트에서는 true로 받아옴
+true일 때만 보여줄거면 삼항연산자 말고, isActive && <b>*</b> 이런 형식이 더 간편
+```
 
 - #### App.js
 ```javascript
@@ -23,7 +28,7 @@ function App() {
   const age = 100;
 
   return (
-    <Hello name="이준용" age={age} />
+    <Hello name="이준용" age={age} isActive />
   );
 }
 
@@ -34,13 +39,13 @@ export default App;
 ```javascript
 import React from 'react';
 
-function Hello({ name, age }) {
-  return <div>안녕하세요 {name} ({age})</div>
+function Hello({ name, age, isActive }) {
+  return <div>{ isActive ? <b>*</b> : null } 안녕하세요 {name} ({age})</div>
 }
 
 // 기본값 설정 가능
 Hello.defaultProps = {
-  age: 23
+  isActive: false,
 }
 
 export { Hello };
