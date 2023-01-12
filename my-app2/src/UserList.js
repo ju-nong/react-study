@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 
-function User({ user, onRemove, onToggle }) {
-    // 왜 show hide show 되냐고
-
-    // useEffect(() => {
-    //     console.log(user);
-    // });
-
+const User = React.memo(({ user, onRemove, onToggle }) => {
+    console.log("user");
     return (
         <div>
             <b
@@ -19,15 +14,9 @@ function User({ user, onRemove, onToggle }) {
             <button onClick={() => onRemove(user.id)}>삭제</button>
         </div>
     );
-}
+});
 
-function UserList({ users, onRemove, onToggle }) {
-    useEffect(() => {
-        console.log("Show & Update", users);
-        return () => {
-            console.log("Hide", users);
-        };
-    }, [users]);
+const UserList = React.memo(({ users, onRemove, onToggle }) => {
     return (
         <div>
             {users.map((user) => (
@@ -40,6 +29,6 @@ function UserList({ users, onRemove, onToggle }) {
             ))}
         </div>
     );
-}
+});
 
-export { User, UserList };
+export { UserList };

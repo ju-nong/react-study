@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 import { UserList } from "./UserList";
-import { CreateUser } from "./CreateUser";
+import { CreateUserMemo } from "./CreateUser";
 
 function countActiveUser(users) {
+    console.log("hih");
     return users.filter((user) => user.active).length;
 }
 
@@ -37,8 +38,8 @@ function App() {
 
     const { username, email } = inputs;
 
-    const onCreate = () => {
-        setUsers([
+    const onCreate = useCallback(() => {
+        setUsers((users) => [
             ...users,
             { id: nextId.current, username, email, active: false },
         ]);
@@ -49,34 +50,34 @@ function App() {
         });
 
         nextId.current += 1;
-    };
+    }, [inputs]);
 
-    const onChange = (event) => {
+    const onChange = useCallback((event) => {
         const { name, value } = event.target;
 
-        setInputs({
+        setInputs((inputs) => ({
             ...inputs,
             [name]: value,
-        });
-    };
+        }));
+    }, []);
 
-    const onRemove = (id) => {
-        setUsers(users.filter((user) => user.id !== id));
-    };
+    const onRemove = useCallback((id) => {
+        setUsers((users) => users.filter((user) => user.id !== id));
+    }, []);
 
-    const onToggle = (id) => {
-        setUsers(
+    const onToggle = useCallback((id) => {
+        setUsers((users) =>
             users.map((user) =>
                 user.id === id ? { ...user, active: !user.active } : user,
             ),
         );
-    };
+    }, []);
 
-    const count = countActiveUser(users);
+    const count = useMemo(() => countActiveUser(users), [users]);
 
     return (
         <>
-            <CreateUser
+            <CreateUserMemo
                 username={username}
                 email={email}
                 onCreate={onCreate}
