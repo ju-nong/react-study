@@ -13,6 +13,18 @@ my-app2 들어가서 npm install 후 npm start 하세요
 
 ---
 
+## 프로젝트 생성
+
+마지막에 프로젝트명 적으면 됨
+
+```
+$ npx create-react-app my-app
+$ cd my-app
+$ npm start
+```
+
+---
+
 ### 컴포넌트 선언 + props + 조건부 렌더링
 
 ```javascript
@@ -228,5 +240,5 @@ const count = useMemo(() => countActiveUser(users), [users]);
 
 ```javascript
 // 설명은 할 수 있겠는데, 아직 익숙치 않음
-// 좀 더 사용하다가 익수해지면 추가하겠음 ^___^ b
+// 좀 더 사용하다가 익숙해지면 추가하겠음 ^___^ b
 ```
