@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-function Input({ addTodo, typing }) {
+function Input({ addTodo, typing, allCheck, isAllCheck }) {
     const $input = useRef();
 
     const enterChk = (event) => {
@@ -13,7 +13,12 @@ function Input({ addTodo, typing }) {
 
     return (
         <div>
-            <button contenteditable="true">All</button>
+            <button
+                className={`allCheckBtn ${isAllCheck ? "allChecked" : ""}`}
+                onClick={allCheck}
+            >
+                All
+            </button>
             <input
                 type="text"
                 ref={$input}
