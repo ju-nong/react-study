@@ -10,7 +10,7 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
 
     const [editable, setEditable] = useState(false);
 
-    const edit = (event) => {
+    const edit = () => {
         setEditable(true);
     };
 
@@ -25,7 +25,7 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
     };
 
     const actionToggleState = (event) => {
-        toggleState(todo.id, event.target.value);
+        toggleState(todo.id, event.target.checked);
     };
 
     return (

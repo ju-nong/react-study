@@ -22,12 +22,14 @@ function App() {
         }
     }, [todos, filter]);
 
-    const isAllCheck = useMemo(
-        () =>
+    const isAllCheck = useMemo(() => {
+        console.log(`체크 개수 ${todos.filter((todo) => todo.state).length}`);
+        console.log(`모든 개수 ${todos.length}`);
+        return (
             todos.filter((todo) => todo.state).length === todos.length &&
-            todos.length > 0,
-        [todos],
-    );
+            todos.length > 0
+        );
+    }, [todos]);
 
     const notChecks = useMemo(
         () => todos.filter((todo) => !todo.state).length,
@@ -68,7 +70,6 @@ function App() {
     };
 
     const toggleState = (id, state) => {
-        console.log(state);
         setTodo((todos) =>
             todos.map((todo) => (todo.id === id ? { ...todo, state } : todo)),
         );
