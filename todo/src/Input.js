@@ -21,6 +21,7 @@ function Input({ addTodo, typing, allCheck, isAllCheck }) {
             </button>
             <input
                 type="text"
+                placeholder="What needs to be done?"
                 ref={$input}
                 onKeyDown={enterChk}
                 onChange={typing}

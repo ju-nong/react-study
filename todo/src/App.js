@@ -23,8 +23,6 @@ function App() {
     }, [todos, filter]);
 
     const isAllCheck = useMemo(() => {
-        console.log(`체크 개수 ${todos.filter((todo) => todo.state).length}`);
-        console.log(`모든 개수 ${todos.length}`);
         return (
             todos.filter((todo) => todo.state).length === todos.length &&
             todos.length > 0
@@ -79,22 +77,34 @@ function App() {
         setContent(event.target.value);
     };
 
+    const clearComplate = () => {
+        setTodo((todos) => todos.filter((todo) => !todo.state));
+    };
+
     return (
         <main>
-            <h1>todos</h1>
-            <Input
-                addTodo={addTodo}
-                typing={typing}
-                allCheck={allCheck}
-                isAllCheck={isAllCheck}
-            />
-            <MemoryTodoList
-                todos={showTodos}
-                removeTodo={removeTodo}
-                editTodo={editTodo}
-                toggleState={toggleState}
-            />
-            <MemoryBottomMenu count={notChecks} filtering={filtering} />
+            <div>
+                <header>
+                    <h1>todos</h1>
+                    <Input
+                        addTodo={addTodo}
+                        typing={typing}
+                        allCheck={allCheck}
+                        isAllCheck={isAllCheck}
+                    />
+                </header>
+                <MemoryTodoList
+                    todos={showTodos}
+                    removeTodo={removeTodo}
+                    editTodo={editTodo}
+                    toggleState={toggleState}
+                />
+                <MemoryBottomMenu
+                    count={notChecks}
+                    filtering={filtering}
+                    clearComplate={clearComplate}
+                />
+            </div>
         </main>
     );
 }

@@ -15,12 +15,12 @@ function BottomButton({ name, index, filtering }) {
     );
 }
 
-function BottomMenu({ count, filtering }) {
+function BottomMenu({ count, filtering, clearComplate }) {
     const menus = ["all", "active", "completed"];
     return (
-        <div className="bottom-menu">
+        <footer>
             <span>{count} items left</span>
-            <span>
+            <span className="menu">
                 {menus.map((menu, index) => (
                     <BottomButton
                         name={menu}
@@ -30,8 +30,8 @@ function BottomMenu({ count, filtering }) {
                     />
                 ))}
             </span>
-            <button>Clear completed</button>
-        </div>
+            <button onClick={clearComplate}>Clear completed</button>
+        </footer>
     );
 }
 
