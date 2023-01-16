@@ -141,6 +141,7 @@ function App() {
                     <a
                         href="https://todomvc.com/examples/react"
                         target="_blank"
+                        style={{ marginLeft: 3, marginRight: 3 }}
                     >
                         여기
                     </a>
