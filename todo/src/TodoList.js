@@ -36,7 +36,7 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
                 ref={checkBox}
                 onChange={actionToggleState}
             />
-            <label for={todo.id}></label>
+            <label htmlFor={todo.id}></label>
             <span
                 contentEditable={editable}
                 onDoubleClick={edit}

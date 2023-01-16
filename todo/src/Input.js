@@ -5,7 +5,7 @@ function Input({ addTodo, typing, allCheck, isAllCheck }) {
 
     const enterChk = (event) => {
         // 입력된 키코드가 Enter고 현재 문자가 조합 중이 아닐 때
-        if (event.code === "Enter" && !event.nativeEvent.isComposing) {
+        if (event.keyCode === 13 && !event.nativeEvent.isComposing) {
             addTodo();
             $input.current.value = "";
         }

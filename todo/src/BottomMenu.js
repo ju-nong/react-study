@@ -11,7 +11,7 @@ function BottomButton({ name, index, filtering }) {
                 onChange={filtering}
                 id={name}
             />
-            <label for={name}>
+            <label htmlFor={name}>
                 <p> {name}</p>
             </label>
         </>
