@@ -24,6 +24,18 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
         }
     };
 
+    const enterCheck = (event) => {
+        if (event.keyCode === 13) {
+            setEditable(false);
+
+            const content = event.target.innerText;
+
+            if (content) {
+                editTodo(todo.id, content);
+            }
+        }
+    };
+
     const actionToggleState = (event) => {
         toggleState(todo.id, event.target.checked);
     };
@@ -41,6 +53,8 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
                 contentEditable={editable}
                 onDoubleClick={edit}
                 onBlur={actionEdit}
+                onKeyDown={enterCheck}
+                suppressContentEditableWarning={true}
             >
                 {todo.content}
             </span>
