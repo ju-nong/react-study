@@ -2,14 +2,19 @@ import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Input } from "./Input";
 import { MemoryTodoList } from "./TodoList";
 import { MemoryBottomMenu } from "./BottomMenu";
+import { MemoryClearSheet } from "./ClearSheet";
 
 function App() {
-    const nextId = useRef(0);
+    const nextId = useRef(isNaN(localStorage.getItem("nextId")) && 0);
     const [todos, setTodo] = useState(
         JSON.parse(localStorage.getItem("todos")) ?? [],
     );
 
     const [filter, setFilter] = useState("all");
+
+    const [clears, setClears] = useState(
+        JSON.parse(localStorage.getItem("clears")) ?? [],
+    );
 
     const filtering = (event) => {
         setFilter(event.target.value);
@@ -81,14 +86,24 @@ function App() {
     };
 
     const clearComplate = () => {
+        setClears((clears) => [
+            ...clears,
+            ...todos.filter((todo) => todo.state),
+        ]);
         setTodo((todos) => todos.filter((todo) => !todo.state));
         setFilter("all");
     };
 
+    const hide = (event) => {
+        event.target.style.opacity = 0;
+    };
+
     useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(todos));
+        localStorage.setItem("clears", JSON.stringify(clears));
+        localStorage.setItem("nextId", nextId.current);
         return () => {};
-    }, [todos]);
+    }, [todos, clears, nextId]);
 
     return (
         <>
@@ -122,7 +137,7 @@ function App() {
                 <p>더블클릭해서 할 일을 수정하세요.</p>
                 <p>만든이 이준용</p>
                 <p>
-                    사실{" "}
+                    사실
                     <a
                         href="https://todomvc.com/examples/react"
                         target="_blank"
@@ -132,6 +147,8 @@ function App() {
                     클론코딩함
                 </p>
             </div>
+            <MemoryClearSheet items={clears} />
+            {/* <img src="./ari.jpg" alt="아리" id="cursorImg" onClick={hide} /> */}
         </>
     );
 }
