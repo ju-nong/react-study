@@ -1,11 +1,14 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Input } from "./Input";
 import { MemoryTodoList } from "./TodoList";
 import { MemoryBottomMenu } from "./BottomMenu";
 
 function App() {
     const nextId = useRef(0);
-    const [todos, setTodo] = useState([]);
+    const [todos, setTodo] = useState(
+        JSON.parse(localStorage.getItem("todos")) ?? [],
+    );
+
     const [filter, setFilter] = useState("all");
 
     const filtering = (event) => {
@@ -81,6 +84,11 @@ function App() {
         setTodo((todos) => todos.filter((todo) => !todo.state));
         setFilter("all");
     };
+
+    useEffect(() => {
+        localStorage.setItem("todos", JSON.stringify(todos));
+        return () => {};
+    }, [todos]);
 
     return (
         <>
