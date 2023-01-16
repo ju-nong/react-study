@@ -30,13 +30,13 @@ function List({ todo, removeTodo, editTodo, toggleState }) {
 
     return (
         <li>
-            <label>
-                <input
-                    type="checkbox"
-                    ref={checkBox}
-                    onChange={actionToggleState}
-                />
-            </label>
+            <input
+                id={todo.id}
+                type="checkbox"
+                ref={checkBox}
+                onChange={actionToggleState}
+            />
+            <label for={todo.id}></label>
             <span
                 contentEditable={editable}
                 onDoubleClick={edit}

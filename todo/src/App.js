@@ -79,33 +79,52 @@ function App() {
 
     const clearComplate = () => {
         setTodo((todos) => todos.filter((todo) => !todo.state));
+        setFilter("all");
     };
 
     return (
-        <main>
-            <div>
-                <header>
-                    <h1>todos</h1>
-                    <Input
-                        addTodo={addTodo}
-                        typing={typing}
-                        allCheck={allCheck}
-                        isAllCheck={isAllCheck}
+        <>
+            <main>
+                <div>
+                    <header>
+                        <h1>todos</h1>
+                        <Input
+                            addTodo={addTodo}
+                            typing={typing}
+                            allCheck={allCheck}
+                            isAllCheck={isAllCheck}
+                        />
+                    </header>
+                    <MemoryTodoList
+                        todos={showTodos}
+                        removeTodo={removeTodo}
+                        editTodo={editTodo}
+                        toggleState={toggleState}
                     />
-                </header>
-                <MemoryTodoList
-                    todos={showTodos}
-                    removeTodo={removeTodo}
-                    editTodo={editTodo}
-                    toggleState={toggleState}
-                />
-                <MemoryBottomMenu
-                    count={notChecks}
-                    filtering={filtering}
-                    clearComplate={clearComplate}
-                />
+                    {todos.length > 0 && (
+                        <MemoryBottomMenu
+                            count={notChecks}
+                            filtering={filtering}
+                            clearComplate={clearComplate}
+                        />
+                    )}
+                </div>
+            </main>
+            <div className="copyright">
+                <p>더블클릭해서 할 일을 수정하세요.</p>
+                <p>만든이 이준용</p>
+                <p>
+                    사실{" "}
+                    <a
+                        href="https://todomvc.com/examples/react"
+                        target="_blank"
+                    >
+                        여기
+                    </a>
+                    클론코딩함
+                </p>
             </div>
-        </main>
+        </>
     );
 }
 

@@ -2,16 +2,19 @@ import React from "react";
 
 function BottomButton({ name, index, filtering }) {
     return (
-        <label>
-            <p> {name}</p>
+        <>
             <input
                 type="radio"
                 value={name}
                 name="state"
                 defaultChecked={index === 0}
                 onChange={filtering}
+                id={name}
             />
-        </label>
+            <label for={name}>
+                <p> {name}</p>
+            </label>
+        </>
     );
 }
 
@@ -20,7 +23,7 @@ function BottomMenu({ count, filtering, clearComplate }) {
     return (
         <footer>
             <span>{count} items left</span>
-            <span className="menu">
+            <div className="menu">
                 {menus.map((menu, index) => (
                     <BottomButton
                         name={menu}
@@ -29,7 +32,7 @@ function BottomMenu({ count, filtering, clearComplate }) {
                         filtering={filtering}
                     />
                 ))}
-            </span>
+            </div>
             <button onClick={clearComplate}>Clear completed</button>
         </footer>
     );

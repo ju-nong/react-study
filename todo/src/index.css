@@ -16,6 +16,11 @@ body {
     min-width: 230px;
 }
 
+label,
+button {
+    cursor: pointer;
+}
+
 main {
     margin: 130px 0px 40px 0;
     background-color: #fff;
@@ -25,16 +30,16 @@ main {
 
 header h1 {
     position: absolute;
-    top: -200px;
+    top: -132px;
     width: 100%;
     font-size: 100px;
-    font-weight: 100;
+    font-weight: 400;
     text-align: center;
     color: rgba(175, 47, 47, 0.15);
 }
 
 header div {
-    padding: 16px 16px 16px 16px;
+    padding: 16px 16px 16px 0;
     display: flex;
     width: 100%;
 }
@@ -79,8 +84,32 @@ ul li {
     padding: 15px;
     display: flex;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
 }
+
+ul li input {
+    display: none;
+}
+
+ul li input:checked + label {
+    text-align: center;
+    line-height: 40px;
+    border-color: #cee4e0;
+}
+
+ul li input:checked + label:before {
+    content: "✔";
+    color: #61c4b1;
+}
+
+ul li label {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ededed;
+    border-radius: 100%;
+}
+
 ul li:hover button {
     visibility: visible;
 }
@@ -88,7 +117,7 @@ ul li:hover button {
 ul li span {
     width: 80%;
     word-break: break-all;
-    line-height: 1.2;
+    line-height: 40px;
     outline: 0;
 }
 
@@ -97,12 +126,7 @@ ul li button {
     border: 0;
     background-color: transparent;
     padding: 5px;
-    cursor: pointer;
     visibility: hidden;
-}
-
-.hidden {
-    display: none;
 }
 
 .select {
@@ -111,6 +135,10 @@ ul li button {
 
 footer {
     display: flex;
+    position: relative;
+    justify-content: space-between;
+    padding: 5px 15px;
+    color: #777;
 }
 
 footer:before {
@@ -124,12 +152,63 @@ footer:before {
     box-shadow: 0 1px 1px rgb(0 0 0 / 20%), 0 8px 0 -3px #f6f6f6,
         0 9px 1px -3px rgb(0 0 0 / 20%), 0 16px 0 -6px #f6f6f6,
         0 17px 2px -6px rgb(0 0 0 / 20%);
+    z-index: 1;
+}
+
+footer > span {
+    z-index: 2;
+    line-height: 35px;
 }
 
 footer .menu {
     display: flex;
+    justify-content: center;
+    z-index: 2;
+}
+
+footer input {
+    display: none;
+}
+
+footer input:checked + label {
+    border-color: rgba(175, 47, 47, 0.2);
+}
+
+footer label {
+    margin: 3px;
+    padding: 3px 7px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+
+footer label:hover {
+    border-color: rgba(175, 47, 47, 0.1);
 }
 
 footer label p {
     text-transform: capitalize;
+}
+
+footer > button {
+    z-index: 2;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    color: #777;
+}
+
+footer > button:hover {
+    text-decoration: underline;
+}
+
+.copyright {
+    text-align: center;
+    color: #bfbfbf;
+    font-size: 10px;
+    line-height: 2;
+    margin-bottom: 20px;
+}
+
+.copyright a {
+    color: #bfbfbf;
 }
