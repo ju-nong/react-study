@@ -60,62 +60,50 @@ function reducer(state, action) {
     }
 }
 
+const UserDispath = React.createContext(null);
+
 function App() {
-    const [{ username, email }, onChange, reset] = useInputs({
-        username: "",
-        email: "",
-    });
     const [state, dispatch] = useReducer(reducer, initialState);
     const { users } = state;
-    const nextId = useRef(4);
+
     const count = useMemo(() => countActiveUsers(users), [users]);
 
-    const onCreate = useCallback(() => {
-        dispatch({
-            type: "CREATE_USER",
-            user: {
-                id: nextId.current,
-                username,
-                email,
-            },
-        });
-
-        reset();
-        nextId.current += 1;
-    }, [username, email]);
-
-    const onToggle = useCallback(
-        (id) => {
-            dispatch({
-                type: "ACTIVE_TOGGLE",
-                id,
-            });
-        },
-        [users],
-    );
-
-    const onRemove = useCallback(
-        (id) => {
-            dispatch({
-                type: "REMOVE_USER",
-                id,
-            });
-        },
-        [users],
-    );
-
     return (
-        <>
-            <CreateUser
-                username={username}
-                email={email}
-                onChange={onChange}
-                onCreate={onCreate}
-            />
-            <UserList users={users} onToggle={onToggle} onRemove={onRemove} />
+        <UserDispath.Provider value={dispatch}>
+            <CreateUser />
+            <UserList users={users} />
             <div>활성사용자 수 : {count}</div>
-        </>
+        </UserDispath.Provider>
     );
 }
 
 export default App;
+export { UserDispath };
+
+const state = {
+    posts: [
+        {
+            id: 1,
+            title: "제목입니다.",
+            body: "내용입니다.",
+            comments: [
+                {
+                    id: 1,
+                    text: "와 정말 잘 읽었습니다.",
+                },
+            ],
+        },
+        {
+            id: 2,
+            title: "제목입니다.",
+            body: "내용입니다.",
+            comments: [
+                {
+                    id: 2,
+                    text: "또 다른 댓글 어쩌고 저쩌고",
+                },
+            ],
+        },
+    ],
+    selectedId: 1,
+};
