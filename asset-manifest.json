@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-study-todo/static/css/main.88cd74dc.css",
+    "main.js": "/react-study-todo/static/js/main.55b968c0.js",
+    "index.html": "/react-study-todo/index.html",
+    "main.88cd74dc.css.map": "/react-study-todo/static/css/main.88cd74dc.css.map",
+    "main.55b968c0.js.map": "/react-study-todo/static/js/main.55b968c0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88cd74dc.css",
+    "static/js/main.55b968c0.js"
+  ]
+}
