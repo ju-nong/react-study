@@ -8,26 +8,37 @@ function App() {
 
     return (
         <div className="App">
-            {colors.map((color) => (
-                <div className="buttons">
-                    {sizes.map((size) => (
-                        <Button size={size} color={color}>
+            {colors.map((color, idx) => (
+                <div className="buttons" key={idx}>
+                    {sizes.map((size, index) => (
+                        <Button size={size} color={color} key={index}>
                             BUTTON
                         </Button>
                     ))}
                 </div>
             ))}
             <div className="buttons">
-                {[0, 1, 2].map((index) => (
-                    <Button size={sizes[index]} color={colors[index]} outline>
+                {[0, 1, 2].map((index, idx) => (
+                    <Button
+                        size={sizes[index]}
+                        key={idx}
+                        color={colors[index]}
+                        outline
+                    >
                         BUTTON
                     </Button>
                 ))}
             </div>
 
             <div className="buttons">
-                {[0, 1, 2].map((index) => (
-                    <Button size={sizes[index]} color={colors[index]} fullWidth>
+                {[0, 1, 2].map((index, idx) => (
+                    <Button
+                        size={sizes[index]}
+                        key={idx}
+                        color={colors[index]}
+                        fullWidth
+                        onClick={() => console.log("hih")}
+                    >
                         BUTTON
                     </Button>
                 ))}
