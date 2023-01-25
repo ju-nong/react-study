@@ -39,8 +39,8 @@ const styleConfig = {
     },
     fullWidth: () => css`
         width: 100%;
-        justify-content: center;
-        & + & {
+
+        & + button {
             margin-left: 0;
             margin-top: 1rem;
         }
@@ -73,7 +73,7 @@ const StyledButton = styled.button`
     cursor: pointer;
     padding: 0 1rem;
 
-    & + & {
+    & + button {
         margin-left: 1rem;
     }
 

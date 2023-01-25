@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { Button } from "./components/Button";
+import { Dialog } from "./components/Dialog";
 
 const AppBlock = styled.div`
     width: 512px;
@@ -16,6 +17,20 @@ const ButtonGroup = styled.div`
 `;
 
 function App() {
+    const [visible, setVisible] = useState(false);
+
+    const dialogOpen = () => {
+        setVisible(true);
+    };
+
+    const onConfirm = () => {
+        setVisible(false);
+    };
+
+    const onCancel = () => {
+        setVisible(false);
+    };
+
     return (
         <ThemeProvider
             theme={{
@@ -51,17 +66,33 @@ function App() {
                     </Button>
                 </ButtonGroup>
                 <ButtonGroup>
-                    <Button size="large" fullWidth>
+                    <Button className="dd" size="large" fullWidth>
                         BUTTON
                     </Button>
-                    <Button size="large" color="gray" fullWidth>
+                    <Button className="dd" size="large" color="gray" fullWidth>
                         BUTTON
                     </Button>
-                    <Button size="large" color="pink" fullWidth>
-                        BUTTON
+                    <Button
+                        className="dd"
+                        size="large"
+                        color="pink"
+                        fullWidth
+                        onClick={dialogOpen}
+                    >
+                        삭제
                     </Button>
                 </ButtonGroup>
             </AppBlock>
+            <Dialog
+                title="정말로 삭제하시겠습니까?"
+                confirmText="삭제"
+                cancelText="취소"
+                onConfirm={onConfirm}
+                onCancel={onCancel}
+                visible={visible}
+            >
+                데이터를 정말로 삭제하시겠습니까?
+            </Dialog>
         </ThemeProvider>
     );
 }
