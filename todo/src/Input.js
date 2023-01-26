@@ -1,4 +1,38 @@
 import React, { useRef } from "react";
+import styled from "styled-components";
+
+const Row = styled.div`
+    padding: 16px 16px 16px 0;
+    display: flex;
+    width: 100%;
+
+    button.allCheckBtn {
+        width: 10%;
+        border: 0;
+        background-color: transparent;
+        color: #e6e6e6;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    button.allCheckBtn.allChecked {
+        color: #737373;
+    }
+
+    input {
+        border: 0;
+        outline: 0;
+        background-color: transparent;
+        line-height: 1.4em;
+        font-size: 24px;
+        width: 90%;
+    }
+
+    input::placeholder {
+        color: #e6e6e6;
+        font-style: italic;
+    }
+`;
 
 function Input({ addTodo, typing, allCheck, isAllCheck }) {
     const $input = useRef();
@@ -12,7 +46,7 @@ function Input({ addTodo, typing, allCheck, isAllCheck }) {
     };
 
     return (
-        <div>
+        <Row>
             <button
                 className={`allCheckBtn ${isAllCheck ? "allChecked" : ""}`}
                 onClick={allCheck}
@@ -26,7 +60,7 @@ function Input({ addTodo, typing, allCheck, isAllCheck }) {
                 onKeyDown={enterChk}
                 onChange={typing}
             />
-        </div>
+        </Row>
     );
 }
 
