@@ -3,6 +3,7 @@ import styled from "styled-components";
 import palette from "../utils/palette";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import { useTodoState } from "../TodoContext";
 
 dayjs.locale("ko");
 const day = dayjs();
@@ -34,6 +35,8 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead() {
+    const count = useTodoState();
+
     return (
         <TodoHeadBlock>
             <h1>{day.format("YYYY년 MM월 DD일")}</h1>
