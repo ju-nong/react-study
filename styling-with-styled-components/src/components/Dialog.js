@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Button } from "./Button";
 
 const fadeIn = keyframes`
@@ -11,12 +11,29 @@ const fadeIn = keyframes`
     }
 `;
 
+const fadeOut = keyframes`
+    from{
+        opacity:1
+    }
+    to{
+        opacity:0
+    }
+`;
+
 const slideUp = keyframes`
     from{
         transform: translateY(200px);
     }
     to{
         transform: translateY(0px);
+    }
+`;
+
+const slideDown = keyframes`
+    from{
+        transform: translateY(0px);
+    }to{
+        transform: translateY(200px);
     }
 `;
 
@@ -35,6 +52,12 @@ const DarkBackground = styled.div`
     animation-timing-function: ease-out;
     animation-name: ${fadeIn};
     animation-fill-mode: forwards;
+
+    ${(props) =>
+        props.disappear &&
+        css`
+            animation-name: ${fadeOut};
+        `}
 `;
 
 const DialogBlock = styled.div`
@@ -54,6 +77,12 @@ const DialogBlock = styled.div`
     animation-timing-function: ease-out;
     animation-name: ${slideUp};
     animation-fill-mode: forwards;
+
+    ${(props) =>
+        props.disappear &&
+        css`
+            animation-name: ${slideDown};
+        `}
 `;
 
 const ButtonGroup = styled.div`
@@ -85,28 +114,28 @@ function Dialog({
             setAnimate(true);
             setTimeout(() => setAnimate(false), 250);
         }
-
         setLocalVisible(visible);
     }, [localVisible, visible]);
 
+    if (!animate && !localVisible) {
+        return null;
+    }
+
     return (
-        !animate &&
-        localVisible && (
-            <DarkBackground>
-                <DialogBlock>
-                    <h3>{title}</h3>
-                    <p>{children}</p>
-                    <ButtonGroup>
-                        <ShortMarginButton color="gray" onClick={onConfirm}>
-                            {cancelText}
-                        </ShortMarginButton>
-                        <ShortMarginButton color="pink" onClick={onCancel}>
-                            {confirmText}
-                        </ShortMarginButton>
-                    </ButtonGroup>
-                </DialogBlock>
-            </DarkBackground>
-        )
+        <DarkBackground disappear={!visible}>
+            <DialogBlock disappear={!visible}>
+                <h3>{title}</h3>
+                <p>{children}</p>
+                <ButtonGroup>
+                    <ShortMarginButton color="gray" onClick={onConfirm}>
+                        {cancelText}
+                    </ShortMarginButton>
+                    <ShortMarginButton color="pink" onClick={onCancel}>
+                        {confirmText}
+                    </ShortMarginButton>
+                </ButtonGroup>
+            </DialogBlock>
+        </DarkBackground>
     );
 }
 
