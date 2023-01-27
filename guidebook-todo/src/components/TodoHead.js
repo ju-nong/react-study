@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import styled from "styled-components";
 import palette from "../utils/palette";
 import dayjs from "dayjs";
@@ -35,15 +35,18 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead() {
-    const count = useTodoState();
+    const todos = useTodoState();
+    const undoneTodos = todos.filter((todo) => !todo.state);
 
     return (
         <TodoHeadBlock>
             <h1>{day.format("YYYY년 MM월 DD일")}</h1>
             <div className="day">{day.format("ddd요일")}</div>
-            <div className="tasks-left">할 일 2개 남음</div>
+            <div className="tasks-left">할 일 {undoneTodos.length}개 남음</div>
         </TodoHeadBlock>
     );
 }
 
-export { TodoHead };
+const MemoTodoHead = memo(TodoHead);
+
+export { MemoTodoHead as TodoHead };

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState, memo } from "react";
 import styled, { css } from "styled-components";
 import { darken, lighten } from "polished";
 import { MdAdd } from "react-icons/md";
 import palette from "../utils/palette";
+import { useTodoDispatch, useTodoNextId } from "../TodoContext";
 
 const { green, red } = palette();
 
@@ -78,16 +79,42 @@ const Input = styled.input`
 `;
 
 function TodoCreate() {
+    const dispatch = useTodoDispatch();
+    const nextId = useTodoNextId();
+
     const [open, setOpen] = useState(false);
+    const [content, setContent] = useState("");
+
+    const onCreate = (event) => {
+        event.preventDefault();
+
+        if (content.trim().length > 0) {
+            dispatch({
+                type: "CREATE",
+                todo: {
+                    id: nextId.current++,
+                    content,
+                    status: false,
+                },
+            });
+
+            setContent("");
+            setOpen((open) => !open);
+        }
+    };
+
+    const typing = (event) => setContent(event.target.value);
 
     return (
         <>
             {open && (
                 <InsertFormPositioner>
-                    <InsertForm>
+                    <InsertForm onSubmit={onCreate}>
                         <Input
                             autoFocus
                             placeholder="할 일을 입력 후, Enter 를 누르세요"
+                            value={content}
+                            onChange={typing}
                         />
                     </InsertForm>
                 </InsertFormPositioner>
@@ -99,4 +126,6 @@ function TodoCreate() {
     );
 }
 
-export { TodoCreate };
+const MemoTodoCreate = memo(TodoCreate);
+
+export { MemoTodoCreate as TodoCreate };

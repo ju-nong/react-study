@@ -1,8 +1,9 @@
-import React from "react";
+import { memo } from "react";
 import styled, { css } from "styled-components";
 import { lighten } from "polished";
 import { MdDone, MdDelete } from "react-icons/md";
 import palette from "../utils/palette";
+import { useTodoDispatch } from "../TodoContext";
 
 const { green, red } = palette();
 
@@ -44,34 +45,43 @@ const CheckCircle = styled.div`
     cursor: pointer;
 
     ${(props) =>
-        props.done &&
+        props.state &&
         css`
             border: 1px solid ${green};
             color: ${green};
         `}
 `;
 
-const Text = styled.div`
+const Context = styled.div`
     flex: 1;
     font-size: 21px;
     color: #495057;
     ${(props) =>
-        props.done &&
+        props.state &&
         css`
             color: #ced4da;
         `}
 `;
 
-function TodoItem({ text, done }) {
+function TodoItem({ id, content, state }) {
+    const dispatch = useTodoDispatch();
+
+    const onToggle = () => dispatch({ type: "TOGGLE", id });
+    const onRemove = () => dispatch({ type: "REMOVE", id });
+
     return (
         <TodoItemBlock>
-            <CheckCircle done={done}>{done && <MdDone />}</CheckCircle>
-            <Text done={done}>{text}</Text>
-            <Remove>
+            <CheckCircle state={state} onClick={onToggle}>
+                {state && <MdDone />}
+            </CheckCircle>
+            <Context state={state}>{content}</Context>
+            <Remove onClick={onRemove}>
                 <MdDelete />
             </Remove>
         </TodoItemBlock>
     );
 }
 
-export { TodoItem };
+const MemoTodoItem = memo(TodoItem);
+
+export { MemoTodoItem as TodoItem };

@@ -1,27 +1,10 @@
-import React, { useReducer, createContext, useContext, useRef } from "react";
-
-const initialTodos = [
-    {
-        id: 1,
-        text: "프로젝트 생성하기",
-        done: true,
-    },
-    {
-        id: 2,
-        text: "컴포넌트 스타일링 하기",
-        done: true,
-    },
-    {
-        id: 3,
-        text: "Context 만들기",
-        done: false,
-    },
-    {
-        id: 4,
-        text: "기능 구현하기",
-        done: false,
-    },
-];
+import React, {
+    useReducer,
+    createContext,
+    useContext,
+    useRef,
+    useEffect,
+} from "react";
 
 const todoReducer = (state, action) => {
     switch (action.type) {
@@ -29,7 +12,7 @@ const todoReducer = (state, action) => {
             return state.concat(action.todo);
         case "TOGGLE":
             return state.map((todo) =>
-                todo.id === action.id ? { ...todo, done: !todo.done } : todo,
+                todo.id === action.id ? { ...todo, state: !todo.state } : todo,
             );
         case "REMOVE":
             return state.filter((todo) => todo.id !== action.id);
@@ -43,8 +26,17 @@ const TodoDispatchContext = createContext();
 const TodoNextIdConext = createContext();
 
 function TodoProvider({ children }) {
-    const [state, dispatch] = useReducer(todoReducer, initialTodos);
-    const nextId = useRef(5);
+    const [state, dispatch] = useReducer(
+        todoReducer,
+        JSON.parse(localStorage.getItem("todos")) ?? [],
+    );
+    const nextId = useRef(isNaN(localStorage.getItem("nextId")) && 1);
+
+    useEffect(() => {
+        localStorage.setItem("todos", JSON.stringify(state));
+        localStorage.setItem("nextId", nextId.current);
+        return () => {};
+    }, [state, nextId]);
 
     return (
         <TodoStateContext.Provider value={state}>
