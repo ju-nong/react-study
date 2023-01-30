@@ -14,6 +14,7 @@ const profileData = {
 
 function Profile() {
     const { username } = useParams();
+    console.log(username);
     const profile = profileData[username];
 
     if (!profile) {
