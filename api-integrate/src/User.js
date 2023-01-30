@@ -1,17 +1,15 @@
-import axios from "axios";
-import { useAsync } from "./useAsync";
-
-async function getUser(id) {
-    const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/users/${id}`,
-    );
-    return response.data;
-}
+import { useEffect } from "react";
+import { useUsersState, useUsersDispatch, getUser } from "./UserContext";
 
 function User({ id }) {
-    const [state, refetch] = useAsync(() => getUser(id), [id], true);
+    const state = useUsersState();
+    const dispatch = useUsersDispatch();
 
-    const { loading, data: user, error } = state;
+    useEffect(() => {
+        getUser(dispatch, id);
+    }, [dispatch, id]);
+
+    const { loading, data: user, error } = state.user;
 
     if (loading) {
         return <div>로딩중...</div>;
@@ -22,7 +20,7 @@ function User({ id }) {
     }
 
     if (!user) {
-        return <button onClick={refetch}>RELOAD</button>;
+        return null;
     }
 
     return (
