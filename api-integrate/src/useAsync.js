@@ -49,9 +49,6 @@ function useAsync(callback, deps = [], skip = false) {
         }
 
         fetchData();
-        // if (!skip) {
-        //     fetchData();
-        // }
     }, deps);
 
     return [state, fetchData];

@@ -1,17 +1,17 @@
 import axios from "axios";
 import { useAsync } from "./useAsync";
 
-async function fetchUser() {
+async function getUser(id) {
     const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users/",
+        `https://jsonplaceholder.typicode.com/users/${id}`,
     );
     return response.data;
 }
 
-function Users() {
-    const [state, refetch] = useAsync(fetchUser, [], false);
+function User({ id }) {
+    const [state, refetch] = useAsync(() => getUser(id), [id], true);
 
-    const { loading, data: users, error } = state;
+    const { loading, data: user, error } = state;
 
     if (loading) {
         return <div>로딩중...</div>;
@@ -21,20 +21,18 @@ function Users() {
         return <div>에러가 발생했습니다</div>;
     }
 
-    if (!users) return <button onClick={refetch}>RELOAD</button>;
+    if (!user) {
+        return <button onClick={refetch}>RELOAD</button>;
+    }
 
     return (
-        <>
-            <ul>
-                {users.map((user) => (
-                    <li key={user.id}>
-                        {user.username} ({user.name})
-                    </li>
-                ))}
-            </ul>
-            <button onClick={refetch}>RELOAD</button>
-        </>
+        <div>
+            <h2>{user.username}</h2>
+            <p>
+                <b>Email:</b> {user.email}
+            </p>
+        </div>
     );
 }
 
-export { Users };
+export { User };
