@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { Profile } from "./Profile";
+import { WithRouterSample } from "./WithRouterSample";
 
 const Profiles = () => (
     <div>
@@ -12,6 +13,8 @@ const Profiles = () => (
                 <Link to="./gildong">gildong</Link>
             </li>
         </ul>
+
+        <WithRouterSample />
 
         <Routes>
             <Route path="/" element={<div>유저를 선택해주세요.</div>} />
