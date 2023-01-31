@@ -21,17 +21,13 @@ const initialState = [];
 function todos(state = initialState, action) {
     switch (action.type) {
         case ADD_TODO:
-            return {
-                ...state,
-                todo: action.todo,
-            };
+            return state.concat(action.todo);
         case TOGGLE_TODO:
-            return {
-                ...state,
-                id: action.id,
-            };
+            return state.map((todo) =>
+                todo.id === action.id ? { ...todo, done: !todo.done } : todo,
+            );
         default:
-            return initialState;
+            return state;
     }
 }
 

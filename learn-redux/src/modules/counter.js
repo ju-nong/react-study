@@ -36,7 +36,7 @@ function counter(state = initialState, action) {
                 number: state.number - state.diff,
             };
         default:
-            return initialState;
+            return state;
     }
 }
 

@@ -1,6 +1,6 @@
 function Counter({ number, diff, onPlus, onMinus, onSetDiff }) {
     const onChange = (event) => {
-        onSetDiff(parseInt(event.taget.value, 10));
+        onSetDiff(parseInt(event.target.value));
     };
 
     return (
