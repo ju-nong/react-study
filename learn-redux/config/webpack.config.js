@@ -331,6 +331,7 @@ module.exports = function (webpackEnv) {
                 "@components": path.resolve(__dirname, "../src/components"),
                 "@containers": path.resolve(__dirname, "../src/containers"),
                 "@modules": path.resolve(__dirname, "../src/modules"),
+                "@middlewares": path.resolve(__dirname, "../src/middlewares"),
             },
             plugins: [
                 // Prevents users from importing files from outside of src/ (or node_modules/).

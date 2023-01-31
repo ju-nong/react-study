@@ -1,14 +1,15 @@
 import { Counter } from "@components/Counter";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { plus, minus, setDiff } from "@modules/counter";
 
 function CounterContainer() {
-    const { number, diff } = useSelector((state) => ({
-        number: state.counter.number,
-        diff: state.counter.diff,
-    }));
-
-    console.log(number, diff);
+    const { number, diff } = useSelector(
+        (state) => ({
+            number: state.counter.number,
+            diff: state.counter.diff,
+        }),
+        shallowEqual,
+    );
 
     const dispath = useDispatch();
 
