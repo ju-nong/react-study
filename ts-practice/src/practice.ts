@@ -26,7 +26,8 @@ function createList<T extends string | number>(item: T, _length: number): T[] {
     const list: T[] = [];
 
     for (let i: number = 0; i < _length; i++) {
-        list.push(item + i);
+        list.push(item);
+        // list.push(item);
     }
 
     return list;
