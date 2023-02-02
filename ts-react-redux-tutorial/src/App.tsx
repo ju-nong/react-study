@@ -1,7 +1,8 @@
 import React from "react";
+import { CounterContainer } from "./container/CounterContainer";
 
 function App() {
-    return <div className="App"></div>;
+    return <CounterContainer />;
 }
 
 export default App;
