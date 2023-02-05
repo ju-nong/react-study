@@ -7,6 +7,7 @@ import {
     toggleTodo,
     clearTodo,
     allActiveTodo,
+    Todo,
 } from "../modules/todos";
 import { TodoActiveButton } from "./TodoActiveButton";
 
@@ -48,7 +49,10 @@ function TodoInsert() {
     const dispatch = useDispatch();
 
     const isAllCheck = useMemo(
-        () => todos.filter((todo) => !todo.done).every((todo) => todo.isActive),
+        () =>
+            todos
+                .filter((todo: Todo) => !todo.done)
+                .every((todo: Todo) => todo.isActive),
         [todos],
     );
 
@@ -57,11 +61,16 @@ function TodoInsert() {
 
     return (
         <TodoInsertStyled>
-            <TodoActiveButton>All</TodoActiveButton>
+            <TodoActiveButton
+                isAllCheck={isAllCheck}
+                onAllActiveTodo={handleAllActiveTodo}
+            >
+                All
+            </TodoActiveButton>
             <input
                 type="text"
                 placeholder="What needs to be done?"
-                ref={$input}
+                // ref={$input}
                 // onKeyDown={enterChk}
                 // onChange={typing}
             />
