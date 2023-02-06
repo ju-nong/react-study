@@ -45,18 +45,16 @@ const TodoInsertInputStyled = styled.input`
 `;
 
 function TodoInsert() {
-    const todos = useSelector((state: RootState) => state.todos);
+    const todos = useSelector((state: RootState) =>
+        state.todos.filter((todo) => !todo.done),
+    );
     const dispatch = useDispatch();
 
     const [text, setText] = useState("");
 
     const isAllCheck = useMemo(
         () =>
-            todos.length
-                ? todos
-                      .filter((todo: Todo) => !todo.done)
-                      .every((todo: Todo) => todo.isActive)
-                : false,
+            todos.length ? todos.every((todo: Todo) => todo.isActive) : false,
         [todos],
     );
 

@@ -1,7 +1,21 @@
 import { ActionType } from "typesafe-actions";
-import { addTodo, toggleTodo, clearTodo, allActiveTodo } from "./actions";
+import {
+    addTodo,
+    editTodo,
+    toggleTodo,
+    clearTodo,
+    allActiveTodo,
+    doneTodo,
+} from "./actions";
 
-const actions = { addTodo, toggleTodo, clearTodo, allActiveTodo };
+const actions = {
+    addTodo,
+    editTodo,
+    toggleTodo,
+    clearTodo,
+    allActiveTodo,
+    doneTodo,
+};
 
 type Todo = {
     id: number;

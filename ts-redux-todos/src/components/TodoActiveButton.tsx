@@ -10,9 +10,10 @@ function TodoActiveButton({ isAllCheck, onAllActiveTodo, children }: Props) {
     return (
         <button
             className={`allCheckBtn ${isAllCheck ? "allChecked" : ""}`}
+            type="button"
             onClick={onAllActiveTodo}
         >
-            All
+            {children}
         </button>
     );
 }

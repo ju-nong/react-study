@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
+import { Todo } from "../modules/todos";
+
+interface TodoItemProps {
+    todo: Todo;
+    handleToggleTodo?: (id: number) => void;
+    handleEditTodo?: (id: number, text: string) => void;
+    handleClearTodo?: (id: number) => void;
+}
 
 const TodoItemStyled = styled.li`
     border-bottom: 1px solid #ededed;
@@ -64,33 +72,66 @@ const TodoItemStyled = styled.li`
     }
 `;
 
-function TodoItem() {
+function TodoItem({
+    todo,
+    handleToggleTodo,
+    handleEditTodo,
+    handleClearTodo,
+}: TodoItemProps) {
+    const id: string = todo.id.toString();
+    const checkBox = useRef<HTMLInputElement>(null);
+
+    const [editable, setEditable] = useState(false);
+
+    const actionEdit = (event: React.FocusEvent<HTMLSpanElement>) => {
+        setEditable(false);
+
+        const text = event.target.innerText.trim();
+
+        if (text) {
+            handleEditTodo?.(todo.id, text);
+        }
+    };
+
+    const enterCheck = (
+        event:
+            | React.KeyboardEvent<HTMLSpanElement> &
+                  React.FocusEvent<HTMLSpanElement>,
+    ) => {
+        if (event.keyCode === 13) {
+            setEditable(false);
+
+            const content = event.target.innerText;
+
+            if (content) {
+                handleEditTodo?.(todo.id, content);
+            }
+        }
+    };
+
     return (
         <TodoItemStyled>
             <input
-                // id={todo.id}
+                id={id}
                 type="checkbox"
-                // ref={checkBox}
-                // onChange={actionToggleState}
+                ref={checkBox}
+                checked={todo.isActive}
+                onChange={() => handleToggleTodo?.(todo.id)}
             />
-            {/* <label htmlFor={todo.id}></label> */}
-            <label></label>
+            <label htmlFor={id}></label>
             <span
-                // contentEditable={editable}
-                // onDoubleClick={edit}
-                // onBlur={actionEdit}
-                // onKeyDown={enterCheck}
+                contentEditable={editable}
+                onDoubleClick={() => setEditable(true)}
+                onBlur={actionEdit}
+                onKeyDown={enterCheck}
                 suppressContentEditableWarning={true}
             >
-                {/* {todo.content} */}
+                {todo.text}
             </span>
-            <button
-            // onClick={() => removeTodo(todo.id)}
-            >
-                ❌
-            </button>
+            <button onClick={() => handleClearTodo?.(todo.id)}>❌</button>
         </TodoItemStyled>
     );
 }
 
-export { TodoItem };
+export { TodoItem, TodoItemStyled };
+export type { TodoItemProps };

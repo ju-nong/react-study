@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { TodoItem } from "./TodoItem";
+import { TodoItemStyled, TodoItemProps } from "./TodoItem";
+import { useSelector } from "react-redux";
+import { RootState } from "../modules";
 
 const BottomSheet = styled.div`
     position: fixed;
@@ -37,17 +39,39 @@ const BottomSheet = styled.div`
     }
 `;
 
+// const ClearListItem = styled(TodoItemStyled)<TodoItemProps>`
+//     &.nothing {
+//         background-color: #ececec;
+//     }
+// `;
+
+// function Empty() {
+//     return <ClearListItem className="nothing">Nothing...</ClearListItem>;
+// }
+
 function ClearTodos() {
+    const todos = useSelector((state: RootState) =>
+        state.todos.filter((todo) => todo.done),
+    );
+
+    const [visible, setVisible] = useState(false);
+
     return (
-        <BottomSheet>
+        <BottomSheet className={`${visible ? "show" : ""}`}>
             <div>
                 <input
                     type="checkbox"
                     id="bottom-toggle"
-                    // onChange={toggle}
+                    onChange={() => setVisible((visible) => !visible)}
                 />
                 <label htmlFor="bottom-toggle">Clear List</label>
             </div>
+            <ul>
+                {/* {todos.map((todo) => (
+                    <ClearListItem todo={todo}></ClearListItem>
+                ))}
+                <Empty /> */}
+            </ul>
         </BottomSheet>
     );
 }
