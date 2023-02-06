@@ -39,15 +39,15 @@ const BottomSheet = styled.div`
     }
 `;
 
-// const ClearListItem = styled(TodoItemStyled)<TodoItemProps>`
-//     &.nothing {
-//         background-color: #ececec;
-//     }
-// `;
+const ClearListItem = styled(TodoItemStyled)`
+    &.nothing {
+        background-color: #ececec;
+    }
+`;
 
-// function Empty() {
-//     return <ClearListItem className="nothing">Nothing...</ClearListItem>;
-// }
+function Empty() {
+    return <ClearListItem className="nothing">Nothing...</ClearListItem>;
+}
 
 function ClearTodos() {
     const todos = useSelector((state: RootState) =>
@@ -67,10 +67,13 @@ function ClearTodos() {
                 <label htmlFor="bottom-toggle">Clear List</label>
             </div>
             <ul>
-                {/* {todos.map((todo) => (
-                    <ClearListItem todo={todo}></ClearListItem>
-                ))}
-                <Empty /> */}
+                {todos.length == 0 ? (
+                    <Empty />
+                ) : (
+                    todos.map((todo) => (
+                        <TodoItemStyled>{todo.text}</TodoItemStyled>
+                    ))
+                )}
             </ul>
         </BottomSheet>
     );
