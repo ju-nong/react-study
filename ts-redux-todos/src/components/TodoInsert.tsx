@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules";
@@ -11,7 +11,7 @@ import {
 } from "../modules/todos";
 import { TodoActiveButton } from "./TodoActiveButton";
 
-const TodoInsertStyled = styled.div`
+const TodoInsertStyled = styled.form`
     padding: 16px 16px 16px 0;
     display: flex;
     width: 100%;
@@ -28,17 +28,17 @@ const TodoInsertStyled = styled.div`
     button.allCheckBtn.allChecked {
         color: #737373;
     }
+`;
 
-    input {
-        border: 0;
-        outline: 0;
-        background-color: transparent;
-        line-height: 1.4em;
-        font-size: 24px;
-        width: 90%;
-    }
+const TodoInsertInputStyled = styled.input`
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    line-height: 1.4em;
+    font-size: 24px;
+    width: 90%;
 
-    input::placeholder {
+    &::placeholder {
         color: #e6e6e6;
         font-style: italic;
     }
@@ -48,31 +48,44 @@ function TodoInsert() {
     const todos = useSelector((state: RootState) => state.todos);
     const dispatch = useDispatch();
 
+    const [text, setText] = useState("");
+
     const isAllCheck = useMemo(
         () =>
-            todos
-                .filter((todo: Todo) => !todo.done)
-                .every((todo: Todo) => todo.isActive),
+            todos.length
+                ? todos
+                      .filter((todo: Todo) => !todo.done)
+                      .every((todo: Todo) => todo.isActive)
+                : false,
         [todos],
     );
 
-    const handleAddTodo = (text: string) => dispatch(addTodo(text));
     const handleAllActiveTodo = () => dispatch(allActiveTodo(isAllCheck));
 
+    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setText(event.target.value);
+    };
+
+    const handleAddTodo = (event: React.FormEvent) => {
+        event.preventDefault();
+
+        dispatch(addTodo(text));
+        setText("");
+    };
+
     return (
-        <TodoInsertStyled>
+        <TodoInsertStyled onSubmit={handleAddTodo}>
             <TodoActiveButton
                 isAllCheck={isAllCheck}
                 onAllActiveTodo={handleAllActiveTodo}
             >
                 All
             </TodoActiveButton>
-            <input
+            <TodoInsertInputStyled
                 type="text"
                 placeholder="What needs to be done?"
-                // ref={$input}
-                // onKeyDown={enterChk}
-                // onChange={typing}
+                value={text}
+                onChange={handleTextChange}
             />
         </TodoInsertStyled>
     );
