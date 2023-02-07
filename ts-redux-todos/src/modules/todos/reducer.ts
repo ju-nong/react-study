@@ -9,9 +9,11 @@ import {
 } from "./actions";
 import { TodosAction, TodosState } from "./types";
 
-let nextId = 1;
+let nextId: number = JSON.parse(localStorage.getItem("nextId") || "null") ?? 1;
 
-const initialTodos: TodosState = [];
+const initialTodos: TodosState = JSON.parse(
+    localStorage.getItem("todos") || "[]",
+);
 
 const todos = createReducer<TodosState, TodosAction>(initialTodos, {
     [ADD_TODO]: (state, { payload: text }) =>
