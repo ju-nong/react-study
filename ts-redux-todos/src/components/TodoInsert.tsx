@@ -67,8 +67,10 @@ function TodoInsert() {
     const handleAddTodo = (event: React.FormEvent) => {
         event.preventDefault();
 
-        dispatch(addTodo(text));
-        setText("");
+        if (text.trim().length) {
+            dispatch(addTodo(text));
+            setText("");
+        }
     };
 
     return (
