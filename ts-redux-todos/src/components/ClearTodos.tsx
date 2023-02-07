@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { TodoItemStyled, TodoItemProps } from "./TodoItem";
+import { TodoItemStyled } from "./TodoItem";
 import { useSelector } from "react-redux";
 import { RootState } from "../modules";
 
@@ -71,7 +71,9 @@ function ClearTodos() {
                     <Empty />
                 ) : (
                     todos.map((todo) => (
-                        <TodoItemStyled>{todo.text}</TodoItemStyled>
+                        <TodoItemStyled key={todo.id}>
+                            {todo.text}
+                        </TodoItemStyled>
                     ))
                 )}
             </ul>
