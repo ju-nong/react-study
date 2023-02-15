@@ -10,6 +10,7 @@ interface ContainerProps {
     type: State;
     onSwitchTodo: (type: State, todo: Todo) => void;
     onAddTodo: (type: State) => void;
+    onEditTodo: (type: State, id: number, text: string) => void;
 }
 
 const ContainerStyled = styled.ul`
@@ -52,6 +53,7 @@ function TodoContainer({
     type,
     onSwitchTodo,
     onAddTodo,
+    onEditTodo,
 }: ContainerProps) {
     function handleDragOver(event: React.DragEvent<HTMLElement>) {
         event.preventDefault();
@@ -64,8 +66,16 @@ function TodoContainer({
         onSwitchTodo(type, todo);
     }
 
+    const eventDisable = () => false;
+
     return (
-        <ContainerStyled onDragOver={handleDragOver} onDrop={handleDrop}>
+        <ContainerStyled
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onCopy={eventDisable}
+            onCut={eventDisable}
+            onPaste={eventDisable}
+        >
             <TitleStyled>
                 <span>{type}</span>
                 <span>
@@ -73,7 +83,7 @@ function TodoContainer({
                 </span>
             </TitleStyled>
             {todos.map((todo) => (
-                <TodoItem todo={todo} key={todo.id} />
+                <TodoItem todo={todo} key={todo.id} onEditTodo={onEditTodo} />
             ))}
         </ContainerStyled>
     );

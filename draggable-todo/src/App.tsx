@@ -58,6 +58,15 @@ function App() {
         }));
     }
 
+    function handleEditTodo(type: State, id: number, text: string) {
+        setTodos((todos) => ({
+            ...todos,
+            [type]: todos[type].map((todo) =>
+                todo.id === id ? { ...todo, text } : todo,
+            ),
+        }));
+    }
+
     return (
         <BoardStyled>
             <TitleStyled>Draggable</TitleStyled>
@@ -68,6 +77,7 @@ function App() {
                     type={state}
                     onSwitchTodo={handleSwitchTodo}
                     onAddTodo={handleAddTodo}
+                    onEditTodo={handleEditTodo}
                 />
             ))}
         </BoardStyled>
