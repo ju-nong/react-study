@@ -4,8 +4,10 @@ import { colorChange } from "../utils/style";
 import { TodoItem } from "./TodoItem";
 import { Todos, State } from "../modules/todos/types";
 import { FiMoreHorizontal } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { switchTodo, addTodo } from "../modules/todos/actions";
+import { RootState } from "../modules";
+import { clearDrag } from "../modules/drag/actions";
 
 interface ContainerProps {
     todos: Todos;
@@ -48,6 +50,7 @@ const TitleStyled = styled.li`
 `;
 
 function TodoContainer({ todos, type }: ContainerProps) {
+    const drag = useSelector((state: RootState) => state.drag);
     const dispatch = useDispatch();
 
     function handleDragOver(event: React.DragEvent<HTMLElement>) {
@@ -57,8 +60,14 @@ function TodoContainer({ todos, type }: ContainerProps) {
     function handleDrop(event: React.DragEvent<HTMLElement>) {
         event.preventDefault();
 
-        const todo = JSON.parse(event.dataTransfer.getData("item"));
-        dispatch(switchTodo(todo.state, todo.id, todo.text, type));
+        const { todo, dragOver } = drag;
+
+        if (!todo || todo.id === dragOver?.id) {
+            return;
+        }
+
+        dispatch(switchTodo(todo, type, dragOver ? dragOver.id : todos.length));
+        dispatch(clearDrag());
     }
 
     const eventDisable = () => false;
@@ -78,7 +87,7 @@ function TodoContainer({ todos, type }: ContainerProps) {
                 </span>
             </TitleStyled>
             {todos.map((todo) => (
-                <TodoItem todo={todo} key={todo.id} />
+                <TodoItem todo={todo} key={todo.id} drag={drag} />
             ))}
         </ContainerStyled>
     );

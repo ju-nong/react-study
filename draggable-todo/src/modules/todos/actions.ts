@@ -1,4 +1,5 @@
-import { State, ActionReturn } from "./types";
+import { State, Todo } from "./types";
+import { DragOverState } from "../drag/types";
 
 const ADD_TODO = "todo/ADD_TODO" as const;
 const EDIT_TODO = "todo/EDIT_TODO" as const;
@@ -12,35 +13,27 @@ const addTodo = (type: State) => ({
     },
 });
 
-const editTodo = (type: State, id: number, text: string): ActionReturn => ({
+const editTodo = (todo: Todo, text: string) => ({
     type: EDIT_TODO,
     payload: {
-        type,
-        id,
+        todo,
         text,
     },
 });
 
-const switchTodo = (
-    beforeType: State,
-    id: number,
-    text: string,
-    type: State,
-): ActionReturn => ({
+const switchTodo = (todo: Todo, state: State, id: number) => ({
     type: SWITCH_TODO,
     payload: {
-        beforeType,
+        todo,
+        state,
         id,
-        text,
-        type,
     },
 });
 
-const removeTodo = (type: State, id: number): ActionReturn => ({
+const removeTodo = (todo: Todo) => ({
     type: REMOVE_TODO,
     payload: {
-        type,
-        id,
+        todo,
     },
 });
 

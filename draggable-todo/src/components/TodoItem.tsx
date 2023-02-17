@@ -1,85 +1,113 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "@emotion/styled";
 import { colorChange, bgChange } from "../utils/style";
 import { Todo } from "../modules/todos/types";
 import { useDispatch } from "react-redux";
 import { editTodo } from "../modules/todos/actions";
+import { RootState } from "../modules";
+import { addDrag, setDragOver } from "../modules/drag/actions";
+import { DragState } from "../modules/drag/types";
 
 interface ItemProps {
     todo: Todo;
+    drag: DragState;
 }
 
 interface styledProps {
-    marginTop: number;
+    paddingTop: number;
 }
 
-const Item = styled.li<styledProps>`
+const ItemContainer = styled.li<styledProps>`
     width: 100%;
+    cursor: pointer;
+    transition: all 0.5s;
+    padding-top: ${(props) => `calc(1rem + ${props.paddingTop}px)`};
+`;
+
+const Item = styled.div`
     word-break: break-all;
     padding: 1rem;
     color: #2f415f;
     background-color: #fff;
     border-radius: 0.75rem;
-    cursor: pointer;
-    transition: all 0.5s;
-
-    &.empty {
-        color: #888;
-    }
 
     ${colorChange("#2f415f")}
     ${bgChange("#fff")}
-
-    margin-top:${(props) => `calc(1rem + ${props.marginTop}px)`}
 `;
 
-function TodoItem({ todo }: ItemProps) {
-    const [marginTop, setMarginTop] = useState(0);
+function TodoItem({ todo, drag }: ItemProps) {
+    const textContainer = useRef<HTMLDivElement>(null);
+    const { id, state, text } = todo;
+    const [paddingTop, setPaddingTop] = useState(0);
+
     const dispatch = useDispatch();
 
-    function handleDragStart(event: React.DragEvent<HTMLElement>) {
-        event.dataTransfer.setData("item", JSON.stringify(todo));
+    function handleDragStart(event: React.DragEvent<HTMLDivElement>) {
+        dispatch(addDrag(todo));
     }
 
-    function handleFocus(event: React.ChangeEvent<HTMLLIElement>) {
-        if (!todo.text.length) {
-            event.target.innerText = "";
+    function handleFocus(event: React.ChangeEvent<HTMLDivElement>) {
+        if (!text.length && textContainer.current) {
+            textContainer.current.innerText = "";
         }
     }
 
-    function handleBlur(event: React.ChangeEvent<HTMLLIElement>) {
-        const text = event.target.innerText;
-        dispatch(editTodo(todo.state, todo.id, text));
-
-        if (!text) {
-            event.target.innerText = "Empty...";
+    function handleBlur(event: React.ChangeEvent<HTMLDivElement>) {
+        if (textContainer.current) {
+            dispatch(editTodo(todo, textContainer.current.innerText));
         }
     }
 
-    function handleDragEnter(event: React.DragEvent<HTMLLIElement>) {
-        setMarginTop(53);
+    function isOnDrag(callback: Function) {
+        const dragTodo = drag.todo;
+        if (!dragTodo) {
+            return;
+        }
+
+        const { id: dragId, text: dragText, state: dragState } = dragTodo;
+
+        if (state == dragState) {
+            if (id !== dragId) {
+                callback();
+            }
+        } else {
+            callback();
+        }
+    }
+
+    function handleDragOver(event: React.DragEvent<HTMLLIElement>) {
+        dispatch(setDragOver(todo.id, todo.state));
+        isOnDrag(() => setPaddingTop(53));
     }
 
     function handleDragLeave(event: React.DragEvent<HTMLLIElement>) {
-        setMarginTop(0);
+        isOnDrag(() => setPaddingTop(0));
     }
 
+    useEffect(() => {
+        if (!drag.todo) {
+            setPaddingTop(0);
+        }
+    }, [drag.todo]);
+
     return (
-        <Item
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            draggable={true}
-            onDragStart={handleDragStart}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onDragEnter={handleDragEnter}
-            /* onDragEnter={handleDragEnter}
-            onDragEnd={handleDragLeave} */
-            /* className={todo.text.length > 0 ? "" : "empty"} */
-            marginTop={marginTop}
+        <ItemContainer
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            paddingTop={paddingTop}
         >
-            {todo.text || "Empty..."}
-        </Item>
+            <Item
+                ref={textContainer}
+                contentEditable="true"
+                suppressContentEditableWarning={true}
+                draggable={true}
+                onDragStart={handleDragStart}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+            >
+                {text}
+            </Item>
+        </ItemContainer>
     );
 }
 

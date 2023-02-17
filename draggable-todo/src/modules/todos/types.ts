@@ -1,35 +1,12 @@
-import {
-    addTodo,
-    editTodo,
-    removeTodo,
-    switchTodo,
-    ADD_TODO,
-    EDIT_TODO,
-    SWITCH_TODO,
-    REMOVE_TODO,
-} from "./actions";
+import { addTodo, editTodo, removeTodo, switchTodo } from "./actions";
 
 type State = "todo" | "doing" | "done";
 
-type Actions =
-    | typeof addTodo
-    | typeof editTodo
-    | typeof removeTodo
-    | typeof switchTodo;
-
-interface ActionReturn {
-    type:
-        | typeof ADD_TODO
-        | typeof EDIT_TODO
-        | typeof SWITCH_TODO
-        | typeof REMOVE_TODO;
-    payload: {
-        type: State;
-        beforeType?: State | undefined;
-        id?: number | undefined;
-        text?: string | undefined;
-    };
-}
+type TodosAction =
+    | ReturnType<typeof addTodo>
+    | ReturnType<typeof editTodo>
+    | ReturnType<typeof switchTodo>
+    | ReturnType<typeof removeTodo>;
 
 type Todo = {
     id: number;
@@ -47,5 +24,9 @@ const TodoState: Record<State, Todos> = {
 
 const StateList: State[] = ["todo", "doing", "done"];
 
+type Test = {
+    [S in State]: Todo;
+};
+
 export { TodoState, StateList };
-export type { Todo, Todos, State, Actions, ActionReturn };
+export type { Todo, Todos, State, TodosAction };
