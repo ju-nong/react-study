@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { TodoContainer } from "./components/TodoContainer";
-import { Todos, State, TodoState, StateList, Todo } from "./types";
+import { StateList } from "./modules/todos/types";
 import { colorChange } from "./utils/style";
+import { useSelector } from "react-redux";
+import { RootState } from "./modules";
 
 const BoardStyled = styled.div`
     display: flex;
@@ -27,58 +29,13 @@ const TitleStyled = styled.div`
 `;
 
 function App() {
-    const [todos, setTodos] = useState(TodoState);
-
-    function handleSwitchTodo(type: State, todo: Todo) {
-        if (type !== todo.state) {
-            setTodos((todos) => ({
-                ...todos,
-                [todo.state]: todos[todo.state].filter(
-                    (popTodo) => popTodo.id !== todo.id,
-                ),
-                [type]: todos[type]
-                    .concat({
-                        ...todo,
-                        id: todos[type].length + 1,
-                        state: type,
-                    })
-                    .map((todo, index) => ({ ...todo, id: index + 1 })),
-            }));
-        }
-    }
-
-    function handleAddTodo(type: State) {
-        setTodos((todos) => ({
-            ...todos,
-            [type]: todos[type].concat({
-                id: todos[type].length + 1,
-                text: "",
-                state: type,
-            }),
-        }));
-    }
-
-    function handleEditTodo(type: State, id: number, text: string) {
-        setTodos((todos) => ({
-            ...todos,
-            [type]: todos[type].map((todo) =>
-                todo.id === id ? { ...todo, text } : todo,
-            ),
-        }));
-    }
+    const todos = useSelector((state: RootState) => state.todos);
 
     return (
         <BoardStyled>
             <TitleStyled>Draggable</TitleStyled>
             {StateList.map((state) => (
-                <TodoContainer
-                    key={state}
-                    todos={todos[state]}
-                    type={state}
-                    onSwitchTodo={handleSwitchTodo}
-                    onAddTodo={handleAddTodo}
-                    onEditTodo={handleEditTodo}
-                />
+                <TodoContainer key={state} todos={todos[state]} type={state} />
             ))}
         </BoardStyled>
     );

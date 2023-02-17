@@ -2,15 +2,14 @@ import React from "react";
 import styled from "@emotion/styled";
 import { colorChange } from "../utils/style";
 import { TodoItem } from "./TodoItem";
-import { Todos, Todo, State } from "../types";
+import { Todos, State } from "../modules/todos/types";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { useDispatch } from "react-redux";
+import { switchTodo, addTodo } from "../modules/todos/actions";
 
 interface ContainerProps {
     todos: Todos;
     type: State;
-    onSwitchTodo: (type: State, todo: Todo) => void;
-    onAddTodo: (type: State) => void;
-    onEditTodo: (type: State, id: number, text: string) => void;
 }
 
 const ContainerStyled = styled.ul`
@@ -48,13 +47,9 @@ const TitleStyled = styled.li`
     }
 `;
 
-function TodoContainer({
-    todos,
-    type,
-    onSwitchTodo,
-    onAddTodo,
-    onEditTodo,
-}: ContainerProps) {
+function TodoContainer({ todos, type }: ContainerProps) {
+    const dispatch = useDispatch();
+
     function handleDragOver(event: React.DragEvent<HTMLElement>) {
         event.preventDefault();
     }
@@ -63,7 +58,7 @@ function TodoContainer({
         event.preventDefault();
 
         const todo = JSON.parse(event.dataTransfer.getData("item"));
-        onSwitchTodo(type, todo);
+        dispatch(switchTodo(todo.state, todo.id, todo.text, type));
     }
 
     const eventDisable = () => false;
@@ -79,11 +74,11 @@ function TodoContainer({
             <TitleStyled>
                 <span>{type}</span>
                 <span>
-                    <FiMoreHorizontal onClick={() => onAddTodo(type)} />
+                    <FiMoreHorizontal onClick={() => dispatch(addTodo(type))} />
                 </span>
             </TitleStyled>
             {todos.map((todo) => (
-                <TodoItem todo={todo} key={todo.id} onEditTodo={onEditTodo} />
+                <TodoItem todo={todo} key={todo.id} />
             ))}
         </ContainerStyled>
     );

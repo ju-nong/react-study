@@ -1,4 +1,4 @@
-import { State } from "./types";
+import { State, ActionReturn } from "./types";
 
 const ADD_TODO = "todo/ADD_TODO" as const;
 const EDIT_TODO = "todo/EDIT_TODO" as const;
@@ -12,7 +12,7 @@ const addTodo = (type: State) => ({
     },
 });
 
-const editTodo = (type: State, id: number, text: string) => ({
+const editTodo = (type: State, id: number, text: string): ActionReturn => ({
     type: EDIT_TODO,
     payload: {
         type,
@@ -21,15 +21,22 @@ const editTodo = (type: State, id: number, text: string) => ({
     },
 });
 
-const switchTodo = (type: State, text: string) => ({
+const switchTodo = (
+    beforeType: State,
+    id: number,
+    text: string,
+    type: State,
+): ActionReturn => ({
     type: SWITCH_TODO,
     payload: {
-        type,
+        beforeType,
+        id,
         text,
+        type,
     },
 });
 
-const removeTodo = (type: State, id: number) => ({
+const removeTodo = (type: State, id: number): ActionReturn => ({
     type: REMOVE_TODO,
     payload: {
         type,
@@ -37,4 +44,13 @@ const removeTodo = (type: State, id: number) => ({
     },
 });
 
-export { addTodo, editTodo, switchTodo, removeTodo };
+export {
+    addTodo,
+    editTodo,
+    switchTodo,
+    removeTodo,
+    ADD_TODO,
+    EDIT_TODO,
+    SWITCH_TODO,
+    REMOVE_TODO,
+};

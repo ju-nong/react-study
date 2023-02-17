@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "@emotion/styled";
-import { css } from "@emotion/css";
 import { colorChange, bgChange } from "../utils/style";
-import { Todo } from "../types";
-import { State } from "../types";
+import { Todo } from "../modules/todos/types";
+import { useDispatch } from "react-redux";
+import { editTodo } from "../modules/todos/actions";
 
 interface ItemProps {
     todo: Todo;
-    onEditTodo: (type: State, id: number, text: string) => void;
 }
 
 interface styledProps {
@@ -34,8 +33,9 @@ const Item = styled.li<styledProps>`
     margin-top:${(props) => `calc(1rem + ${props.marginTop}px)`}
 `;
 
-function TodoItem({ todo, onEditTodo }: ItemProps) {
+function TodoItem({ todo }: ItemProps) {
     const [marginTop, setMarginTop] = useState(0);
+    const dispatch = useDispatch();
 
     function handleDragStart(event: React.DragEvent<HTMLElement>) {
         event.dataTransfer.setData("item", JSON.stringify(todo));
@@ -49,9 +49,9 @@ function TodoItem({ todo, onEditTodo }: ItemProps) {
 
     function handleBlur(event: React.ChangeEvent<HTMLLIElement>) {
         const text = event.target.innerText;
+        dispatch(editTodo(todo.state, todo.id, text));
 
-        onEditTodo(todo.state, todo.id, text);
-        if (!text.length) {
+        if (!text) {
             event.target.innerText = "Empty...";
         }
     }
@@ -61,8 +61,7 @@ function TodoItem({ todo, onEditTodo }: ItemProps) {
     }
 
     function handleDragLeave(event: React.DragEvent<HTMLLIElement>) {
-        console.log("hih");
-        /* setMarginTop(0); */
+        setMarginTop(0);
     }
 
     return (
@@ -74,11 +73,12 @@ function TodoItem({ todo, onEditTodo }: ItemProps) {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onDragEnter={handleDragEnter}
-            onDragEnd={handleDragLeave}
-            className={todo.text.length > 0 ? "" : "empty"}
+            /* onDragEnter={handleDragEnter}
+            onDragEnd={handleDragLeave} */
+            /* className={todo.text.length > 0 ? "" : "empty"} */
             marginTop={marginTop}
         >
-            {todo.text.length > 0 ? todo.text : "Empty..."}
+            {todo.text || "Empty..."}
         </Item>
     );
 }
