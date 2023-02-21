@@ -1,19 +1,22 @@
-import React, { useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "@emotion/styled";
 import { Todo, TodoTags } from "../modules/todo/types";
 import { colorChange, bgChange } from "../utils/style";
 import { useSelector, useDispatch } from "react-redux";
 import { editTodo } from "../modules/todo/actions";
-import { cleanDrag, setDrag } from "../modules/drag/actions";
+import { setOver, setDrag } from "../modules/drag/actions";
 import { RootState } from "../modules";
 import { DragState } from "../modules/drag/types";
 
 const ContainerStyled = styled.li`
     width: 100%;
     cursor: pointer;
+
     transition: all 0.5s;
+    &.isOver {
+        padding-top: 50%;
+    }
 `;
-// padding-top: ${(props) => `calc(1rem + ${props.paddingTop}px)`};
 
 const ItemStyled = styled.div`
     word-break: break-all;
@@ -29,13 +32,15 @@ const ItemStyled = styled.div`
 interface TodoItemProps {
     tag: TodoTags;
     todo: Todo;
+    index: number;
 }
 
-function TodoItem({ tag, todo }: TodoItemProps) {
+function TodoItem({ tag, todo, index }: TodoItemProps) {
+    const [isOver, setIsOver] = useState<boolean>(false);
+
     const drag: DragState = useSelector((state: RootState) => state.drag);
     const dispatch = useDispatch();
-
-    const itemElement = useRef<HTMLDivElement>(null);
+    const cloneDrag = useMemo<DragState>(() => drag, [drag]);
 
     function edting(event: React.ChangeEvent<HTMLDivElement>) {
         const text = event.target.innerText;
@@ -44,21 +49,43 @@ function TodoItem({ tag, todo }: TodoItemProps) {
         }
     }
 
-    function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-        event.preventDefault();
+    function handleDragEnter() {
+        dispatch(setOver(index));
 
-        console.log(drag);
+        if (!drag) {
+            return;
+        }
+
+        if (drag.todo.id !== todo.id || drag.tag !== tag) {
+            setIsOver(true);
+        }
     }
 
+    useEffect(() => {
+        if (!cloneDrag) {
+            setIsOver(false);
+            return;
+        }
+
+        if (cloneDrag.tag === tag && cloneDrag.index !== index) {
+            setIsOver(false);
+        }
+
+        if (cloneDrag.tag !== tag && cloneDrag.index !== index) {
+            setIsOver(false);
+        }
+    }, [cloneDrag, isOver]);
+
     return (
-        <ContainerStyled>
+        <ContainerStyled
+            className={`${isOver ? "isOver" : ""}`}
+            onDragEnter={handleDragEnter}
+        >
             <ItemStyled
-                ref={itemElement}
                 contentEditable="true"
                 suppressContentEditableWarning={true}
                 draggable={true}
                 onDragStart={() => dispatch(setDrag(tag, todo))}
-                onDragEnd={() => dispatch(cleanDrag())}
                 onBlur={edting}
             >
                 {todo.text}

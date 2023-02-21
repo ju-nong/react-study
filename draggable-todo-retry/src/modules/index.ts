@@ -11,7 +11,6 @@ const logger = (store: any) => (next: (arg0: any) => any) => (action: any) => {
     const result = next(action);
 
     const state = store.getState();
-    console.log(state);
 
     return result;
 };

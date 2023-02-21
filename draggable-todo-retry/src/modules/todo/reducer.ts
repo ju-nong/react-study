@@ -18,13 +18,11 @@ function todo(state: TodoState = initialState, { type, payload }: TodoAction) {
         case ADD_TODO: {
             const tag = payload.tag;
             const target = state[tag];
-            const index = target.length;
             return {
                 ...state,
                 [tag]: target.concat({
-                    id: index,
+                    id: target.length,
                     text: "",
-                    index,
                 }),
             };
         }
@@ -39,36 +37,34 @@ function todo(state: TodoState = initialState, { type, payload }: TodoAction) {
         }
         case SORT_TODO: {
             const { tag, todo, index } = payload;
-            const target = state[tag];
-
-            const flag = index === -1 ? target.length : index;
-            todo.index = flag;
+            const target = state[tag].filter((clone) => clone.id !== todo.id);
 
             return {
                 ...state,
                 [tag]: [
-                    ...target.slice(0, flag),
+                    ...target.slice(0, index),
                     todo,
-                    ...target.slice(flag, -1),
+                    ...target.slice(index, target.length),
                 ],
             };
         }
         case SWITCH_TODO: {
             const { fromTag, toTag, todo, index } = payload;
             const toTarget = state[toTag];
-            todo.id = toTarget.length;
+            const fromTarget = state[fromTag].filter(
+                (from) => from.id !== todo.id,
+            );
 
             const flag = index === -1 ? toTarget.length : index;
-            todo.index = flag;
 
             return {
                 ...state,
-                [toTag]: {
+                [toTag]: [
                     ...toTarget.slice(0, flag),
                     todo,
-                    ...toTarget.slice(flag, -1),
-                },
-                [fromTag]: state[fromTag].filter((from) => from.id !== todo.id),
+                    ...toTarget.slice(flag, toTarget.length),
+                ].map((_, index) => ({ ..._, id: index })),
+                [fromTag]: fromTarget,
             };
         }
         case REMOVE_TODO: {

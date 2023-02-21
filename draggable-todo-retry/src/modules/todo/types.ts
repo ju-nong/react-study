@@ -3,7 +3,6 @@ import { addTodo, editTodo, sortTodo, switchTodo, removeTodo } from "./actions";
 type Todo = {
     id: number;
     text: string;
-    index: number;
 };
 
 type TodoTags = "todo" | "doing" | "done";

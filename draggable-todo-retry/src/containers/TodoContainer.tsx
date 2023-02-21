@@ -9,6 +9,7 @@ import { addTodo, sortTodo, switchTodo } from "../modules/todo/actions";
 import { useSelector } from "react-redux";
 import { RootState } from "../modules";
 import { DragState } from "../modules/drag/types";
+import { cleanDrag } from "../modules/drag/actions";
 
 const ContainerStyled = styled.div`
     flex: 1;
@@ -69,14 +70,22 @@ function TodoContainer({ tag, todos }: TodoContainerProps) {
         event.preventDefault();
 
         if (!drag) {
+            dispatch(cleanDrag());
             return;
         }
 
         if (tag === drag.tag) {
-            dispatch(sortTodo(tag, drag.todo, drag.index ?? -1));
+            if (drag.index === null) {
+                dispatch(cleanDrag());
+                return;
+            }
+
+            dispatch(sortTodo(tag, drag.todo, drag.index));
         } else {
             dispatch(switchTodo(drag.tag, tag, drag.todo, drag.index ?? -1));
         }
+
+        dispatch(cleanDrag());
     }
 
     return (
@@ -88,8 +97,13 @@ function TodoContainer({ tag, todos }: TodoContainerProps) {
                 </span>
             </TitleStyled>
             <ListStyled>
-                {todos.map((todo) => (
-                    <TodoItem tag={tag} todo={todo} key={todo.id} />
+                {todos.map((todo, index) => (
+                    <TodoItem
+                        tag={tag}
+                        todo={todo}
+                        index={index}
+                        key={todo.id}
+                    />
                 ))}
             </ListStyled>
         </ContainerStyled>
