@@ -15,16 +15,6 @@ const ColorItem = styled.li`
 `;
 
 function App() {
-    // const worker = new Worker(
-    //     new URL("./components/worker.js", import.meta.url),
-    // );
-
-    // worker.postMessage("Hello");
-
-    // worker.onmessage = (event) => {
-    //     console.log("client", event);
-    // };
-
     const [colors, setColors] = useState([]);
     const canvasRef = useRef(null);
 
@@ -71,7 +61,7 @@ function App() {
         const { width, height } = ctx.canvas;
         const { data: imageData } = ctx.getImageData(0, 0, width, height);
 
-        const maxWorkers = 10;
+        const maxWorkers = 10000;
 
         const workers = Array.from({ length: maxWorkers }).fill(
             new Worker(new URL("./components/worker.js", import.meta.url)),
@@ -80,6 +70,8 @@ function App() {
         const chunkSize = imageData.byteLength / maxWorkers;
         let cursor = 0;
 
+        const colorObj = {};
+
         for (let i = 0; i < maxWorkers; i++) {
             workers[i].postMessage({
                 dataRef: imageData.slice(cursor, cursor + chunkSize),
@@ -87,9 +79,30 @@ function App() {
             cursor += chunkSize;
 
             workers[i].onmessage = ({ data }) => {
-                setColors((colors) => [...colors, ...data.colorSet]);
+                const { colorSet } = data;
+                let temp = -1;
+
+                for (let item of colorSet) {
+                    temp = colorObj[item] ?? 0;
+                    colorObj[item] = temp + 1;
+                }
             };
         }
+
+        setTimeout(() => {
+            const entries = Object.entries(colorObj);
+
+            entries.sort((a, b) => b[1] - a[1]);
+
+            const sortedKeys = [];
+
+            for (let i = 0; i < 10; i++) {
+                sortedKeys.push(entries[i][0]);
+            }
+
+            console.log(sortedKeys);
+            setColors([...sortedKeys]);
+        }, 10000);
     }
 
     return (
