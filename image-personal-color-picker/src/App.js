@@ -1,6 +1,18 @@
 import React, { useRef, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 
+const RootContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const ImageViewer = styled.canvas`
+    width: 100%;
+    height: 100%;
+
+    border: 3px solid #eee;
+`;
+
 const ColorContainer = styled.ul`
     display: flex;
     list-style: none;
@@ -15,8 +27,10 @@ const ColorItem = styled.li`
 `;
 
 function App() {
-    const [colors, setColors] = useState([]);
     const canvasRef = useRef(null);
+    const [uploaded, setUploaded] = useState(false);
+    const [pos, setPos] = useState(null);
+    const [colors, setColors] = useState(new Set());
 
     // 이미지 첨부하면 canvas에 그려주기
     function handleImageUpload(event) {
@@ -33,35 +47,23 @@ function App() {
                 canvas.height = img.height;
                 const ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
+                setUploaded(true);
             };
         };
+
+        setColors(new Set());
     }
 
-    // color 추출
-    function handleGetImageData() {
-        const ctx = canvasRef.current.getContext("2d");
-        const { width, height } = ctx.canvas;
-        const { data: imageData } = ctx.getImageData(0, 0, width, height);
-
-        const mainSet = new Set();
-        // const start = performance.now();
-        for (let i = 0; i < imageData.length; i += 4) {
-            const nextRGBA = `rgba(${imageData[i]}, ${imageData[i + 1]}, ${
-                imageData[i + 2]
-            }, ${imageData[i + 3]})`.replace(/\n/g, "");
-            mainSet.add(nextRGBA);
+    function handleColorPicker() {
+        if (!uploaded) {
+            return;
         }
-        // const end = performance.now();
-        setColors([...mainSet].slice(0, 30));
-    }
 
-    // worker를 이용한 color 추출
-    function handleGetImageDataWithWorkers() {
         const ctx = canvasRef.current.getContext("2d");
         const { width, height } = ctx.canvas;
         const { data: imageData } = ctx.getImageData(0, 0, width, height);
 
-        const maxWorkers = 10000;
+        const maxWorkers = 9;
 
         const workers = Array.from({ length: maxWorkers }).fill(
             new Worker(new URL("./components/worker.js", import.meta.url)),
@@ -69,8 +71,6 @@ function App() {
 
         const chunkSize = imageData.byteLength / maxWorkers;
         let cursor = 0;
-
-        const colorObj = {};
 
         for (let i = 0; i < maxWorkers; i++) {
             workers[i].postMessage({
@@ -80,44 +80,25 @@ function App() {
 
             workers[i].onmessage = ({ data }) => {
                 const { colorSet } = data;
-                let temp = -1;
 
-                for (let item of colorSet) {
-                    temp = colorObj[item] ?? 0;
-                    colorObj[item] = temp + 1;
-                }
+                setColors((colors) => new Set([...colors, colorSet]));
             };
         }
-
-        setTimeout(() => {
-            const entries = Object.entries(colorObj);
-
-            entries.sort((a, b) => b[1] - a[1]);
-
-            const sortedKeys = [];
-
-            for (let i = 0; i < 10; i++) {
-                sortedKeys.push(entries[i][0]);
-            }
-
-            console.log(sortedKeys);
-            setColors([...sortedKeys]);
-        }, 10000);
     }
 
     return (
-        <div>
+        <RootContainer>
             <input type="file" onChange={handleImageUpload} />
-            <canvas
+            <ImageViewer
                 ref={canvasRef}
-                onClick={handleGetImageDataWithWorkers}
-            ></canvas>
+                onClick={handleColorPicker}
+            ></ImageViewer>
             <ColorContainer>
-                {colors.map((color) => (
+                {Array.from(colors).map((color) => (
                     <ColorItem color={color} key={color}></ColorItem>
                 ))}
             </ColorContainer>
-        </div>
+        </RootContainer>
     );
 }
 
