@@ -30,11 +30,12 @@ function TodoProvider({ children }) {
         todoReducer,
         JSON.parse(localStorage.getItem("todos")) ?? [],
     );
-    const nextId = useRef(isNaN(localStorage.getItem("nextId")) && 1);
+    const nextId = useRef(JSON.parse(localStorage.getItem("nextId")) ?? 1);
 
     useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(state));
-        localStorage.setItem("nextId", nextId.current);
+        localStorage.setItem("nextId", JSON.stringify(nextId.current));
+        console.log(nextId.current);
         return () => {};
     }, [state, nextId]);
 
